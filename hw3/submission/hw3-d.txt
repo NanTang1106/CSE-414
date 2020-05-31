@@ -1,0 +1,8 @@
+It is my first time using database manage system on azure, and the experience is
+fantastic.
+Maybe due to the web connection and limited memory use on the azure server, even
+single linear queries (with O(n)) took couple of seconds to complete. Compare to
+personal computer, operate database on web server is more expensive on time.
+The advantage of DBMS on web server is conspicuous. It is more secure and convenient
+to share datasource with others. Also, web server is a safe place to store and
+operate trillions of data, which is possible crash personal computer.

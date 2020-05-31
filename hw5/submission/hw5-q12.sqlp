@@ -1,0 +1,36 @@
+-- question 12
+
+SELECT result.first_country, result.second_country, mountains, seas
+FROM (LET cbind = (SELECT c.`-car_code` AS code, c.name AS cname,
+                       s.`-id` AS sid, m.`-id` AS mid
+                   FROM hw5index.country c, hw5index.mountain m, hw5index.sea s,
+                       split(s.`-country`, ' ') zs, split(m.`-country`, ' ') zm
+                   WHERE c.`-car_code` = zs AND c.`-car_code` = zm)
+      SELECT DISTINCT cb1.cname AS first_country, cb2.cname AS second_country,
+          cb1.code AS first_code, cb2.code AS second_code
+      FROM cbind cb1, cbind cb2
+      WHERE cb1.sid= cb2.sid AND cb1.mid = cb2.mid
+          AND cb1.code > cb2.code) result
+LET seas = (SELECT DISTINCT y1.name AS sea
+            FROM hw5.world x, x.mondial.sea y1, split(y1.`-country`, ' ') zs1,
+                x.mondial.sea y2, split(y2.`-country`, ' ') zs2
+            WHERE zs1 = result.first_code AND zs2 = result.second_code
+                AND y1.`-id` = y2.`-id`),
+    mountains = (SELECT DISTINCT y1.name AS mountain
+                 FROM hw5.world x, x.mondial.mountain y1,
+                     split(y1.`-country`, ' ') zm1,
+                     x.mondial.mountain y2, split(y2.`-country`, ' ') zm2
+                 WHERE zm1 = result.first_code
+                     AND zm2 = result.second_code
+                     AND y1.`-id` = y2.`-id`);
+
+-- 7 rows
+/*
+{ "mountains": { "orderedlist": [ { "mountain": "Sulitjelma" } ] }, "seas": { "orderedlist": [ { "sea": "Skagerrak" } ] }, "first_country": "Sweden", "second_country": "Norway" }
+{ "mountains": { "orderedlist": [ { "mountain": "Llullaillaco" }, { "mountain": "Ojos del Salado" } ] }, "seas": { "orderedlist": [ { "sea": "Atlantic Ocean" } ] }, "first_country": "Chile", "second_country": "Argentina" }
+{ "mountains": { "orderedlist": [ { "mountain": "Changbai Shan" } ] }, "seas": { "orderedlist": [ { "sea": "Yellow Sea" } ] }, "first_country": "China", "second_country": "North Korea" }
+{ "mountains": { "orderedlist": [ { "mountain": "Mt Bona" }, { "mountain": "Mt St.Elias" }, { "mountain": "Mt Fairweather" } ] }, "seas": { "orderedlist": [ { "sea": "Arctic Ocean" }, { "sea": "Pacific Ocean" }, { "sea": "Atlantic Ocean" } ] }, "first_country": "United States", "second_country": "Canada" }
+{ "mountains": { "orderedlist": [ { "mountain": "Vignemale" } ] }, "seas": { "orderedlist": [ { "sea": "Atlantic Ocean" }, { "sea": "Mediterranean Sea" } ] }, "first_country": "France", "second_country": "Spain" }
+{ "mountains": { "orderedlist": [ { "mountain": "Mont Blanc" } ] }, "seas": { "orderedlist": [ { "sea": "Mediterranean Sea" } ] }, "first_country": "Italy", "second_country": "France" }
+{ "mountains": { "orderedlist": [ { "mountain": "Kasbek" } ] }, "seas": { "orderedlist": [ { "sea": "Black Sea" } ] }, "first_country": "Russia", "second_country": "Georgia" }
+*/

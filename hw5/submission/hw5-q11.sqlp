@@ -1,0 +1,23 @@
+-- question 11
+
+LET cbind = (SELECT c.`-car_code` AS code, c.name AS cname,
+                 s.`-id` AS sid, m.`-id` AS mid
+             FROM hw5index.country c, hw5index.mountain m, hw5index.sea s,
+                 split(s.`-country`, ' ') zs, split(m.`-country`, ' ') zm
+             WHERE c.`-car_code` = zs AND c.`-car_code` = zm)
+SELECT DISTINCT cb1.cname AS first_country, cb2.cname AS second_country
+FROM cbind cb1, cbind cb2
+WHERE cb1.sid= cb2.sid AND cb1.mid = cb2.mid
+    AND cb1.code > cb2.code;
+
+-- Duration of all jobs: 0.181 sec
+-- 7rows
+/*
+{ "first_country": "France", "second_country": "Spain" }
+{ "first_country": "Sweden", "second_country": "Norway" }
+{ "first_country": "Russia", "second_country": "Georgia" }
+{ "first_country": "China", "second_country": "North Korea" }
+{ "first_country": "United States", "second_country": "Canada" }
+{ "first_country": "Italy", "second_country": "France" }
+{ "first_country": "Chile", "second_country": "Argentina" }
+*/

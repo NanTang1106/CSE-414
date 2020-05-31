@@ -1,0 +1,10 @@
+SELECT t.p1. MAX(t.y) AS z
+FROM (WITH parent_child2 AS (SELECT pc.p1 AS p3, pc.p2 AS p4
+	     	       	     FROM parent_child pc)
+	SELECT pc1.p1 AS p1, count(*) AS y
+	FROM person_living pl, parent_child pc1, parent_child2 pc2
+	WHERE pl.x = pc1.p1 AND pc1.p2 = pc2.p3
+	GROUP BY pc1.p1, pc2.p3) AS t
+GROUP BY t.p1
+
+
